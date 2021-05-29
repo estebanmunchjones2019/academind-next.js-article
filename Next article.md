@@ -1,6 +1,6 @@
 # Next.js + WordPress as headless CMS
 
-Do you want to edit the content of your apps without touching a single line of code?😯 
+Do you want to edit the content of your apps without touching a single line of code? 😯 
 
 In this tutorial we'll explore **Next.js, one of the best performing front end web frameworks 🚀**, and **WordPress, the most popular open source software for creating websites**. 
 
@@ -379,21 +379,107 @@ Our post is exposed to the world, and is ready to be consumed by any other app, 
 
 
 
+## Creating new data types
+
+What if we want to create an array of events so it's exposed in the REST API? Events are not part of the default data types, like `Posts` are. 
+
+ In WordPress, data types are called `posts`, which can be quite confusing with the actual `Posts` (blog posts). For instance: if we have `events`, `meetings`, `products`, `offers`, they are all `posts` (of different types) in the WordPress world. 
+
+So, let's add new data type or `post type` by installing a **plugin**, which is a piece of code that we plugin to our WordPress app with just a few clicks.
+
+#### Installing a plugin
+
+These are the steps for installing a the `Custom Post Type UI` plugin by `WebDevStudios`:
+
+![](images/plugin-1.png)
+
+
+
+![](images/plugin-2.png)
+
+
+
+![](images/plugin-3.png)
+
+
+
+#### Adding `events` post type
+
+We are now ready to add `events` as a new post type.
+
+After activating this plugin, some new functionality has been added to our WordPress installation: the dashboard has a new tab called `CPT UI`. Let's follow these steps to finally add `events`:
+
+![](images/events-1.png)
+
+
+
+![](images/events-2.png)
+
+
+
+Make sure `Show in REST API` is set to `True`, and then select any name you want for the REST API. In this case, as `events` has been chosen, the the array of `events` is gonna be retrievable at `subdomain/wp-json/wp/v2/events`.
+
+![](images/events-3.png)
+
+
+
+![](images/events-4.png)
+
+
+
+Let's now add a new event:
+
+![](images/events-5.png)
+
+
+
+An follow the same pattern we used for writin a new `Post` at the beginning. By default, the `Events` editing page looks the same as `Posts`, where we can write a title and body. Here is an example of an event:
+
+![](images/events-6.png)
+
+ Create a title and a body and then publish it.
+
+Let's test if we get an array of events when hitting: `my-wordpress.sportslink.info/wp-json/wp/v2/events`.
+
+
+
+![](images/events-7.png)
+
+
+
 ## Adding custom fields:
 
-Inside `Posts` we have a list of default fields, like `content` and `author`, that come out of the box. What if we wanna add something custom, like the picture of the author, for example?
+So far, so good, But...**an event should have a date and location**, should't it?
 
-This can be achieved by installing a **plugin**, which is a piece of code that we plugin to our WordPress app with just a few clicks.
+By default, our new `event` post type doesn't have any fields that let us load these data we want.
+
+Once again, a plugin comes to solve a problem: let's install `Advance Custom Fields`, by `Elliot Condon`. 
+
+Once installed, let's use it:
+
+![](images/events-8.png)
 
 
 
+![](images/events-9.png)
 
 
-## Creating a new data types
 
-What if we want to create a list of events? Events are not part of the default data types, like `Posts` are.  In WordPress, data types are called `posts`, which can be quite confusing with the actual `Posts` (blog posts). 
+![](images/events-10.png)
 
-So, to add new data type or `post types` through a plugin. 
+
+
+![](images/events-11.png)
+
+
+
+![](images/events-12.png)
+
+
+
+Well done! it took some time to set it up, but we can now see if these 2 fields appear when we try to edit/update an `event`.
+
+Let's try updating the already created `event` called `Web dev conference`:
 
 
 
