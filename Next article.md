@@ -60,6 +60,10 @@ Demo app:
 
 -Testing SSG and ISG
 
+-Fine tuning: forcing https on subdomain, redicrecting to subdomain.
+
+
+
 
 
 Conclusion:
@@ -480,6 +484,38 @@ Once installed, let's use it:
 Well done! it took some time to set it up, but we can now see if these 2 fields appear when we try to edit/update an `event`.
 
 Let's try updating the already created `event` called `Web dev conference`:
+
+![](images/events-13.png)
+
+
+
+#### Exposing custom fields in the REST API
+
+By default, custom fields are not exposed in the REST API, so we need a new...(you guested it!)...plugin, to  make this happen without the need of writing any code. The plugin we need to install and activate is `ACF to REST API` by `Aires Gonçalves`.
+
+Let's now check that REST API for `events`, by going to `my-wordpress.sportslink.info/wp-json/wp/v2/events`:
+
+![](images/events-14.png)
+
+
+
+
+
+In a folder, create a new Next.js project by running this on the terminal:
+
+````bash
+npx create-next-app
+````
+
+And let's name it `tech-blog`:
+
+````bash
+✔ What is your project named? … tech-blog
+````
+
+
+
+
 
 
 
