@@ -52,15 +52,15 @@ Demo app:
 
 ​	-Adding custom data
 
--Next.js blog demo app
+-Next.js code
 
--Deploying to vercel
+-Deploying the Next.js app to Vercel
 
 -Connecting the main domain to vercel
 
--Testing SSG and ISG
+-Testing SSG and ISR
 
--Fine tuning: forcing https on subdomain, redicrecting to subdomain.
+-Fine tuning: forcing https usage on subdomain, redicrecting the subdomain
 
 
 
@@ -160,7 +160,7 @@ BBC America has decided to use WordPress as a full stack app, because besides us
 
 Enough of theory. 
 
-Let's now build a Next.js app and connect it to a WordPress back end, so you can see the full potential of this tech stack combo. The Next.js app is deployed here: ------Deployed app url-------, and the WordPress back end is installed here: -------------Subdomain here-----------.
+Let's now build a Next.js app and connect it to a WordPress back end, so you can see the full potential of this tech stack combo. The Next.js app is deployed here: https://academind-next-js-tech-blog.vercel.app/, and the WordPress back end is installed here: https://my-wordpress.sportslink.info/.
 
 The Next.js app displays tech blog posts and events, and it uses SSG and ISR technology, deployed on Vercel (https://vercel.com/).
 
@@ -499,7 +499,23 @@ Let's now check that REST API for `events`, by going to `my-wordpress.sportslink
 
 
 
+👉 Challenge for you here:
 
+There are a few things you can try on your own:
+
+- Upload featured images for `Events` and `Posts`. (Hint: when creating or editing them, look on your right).
+- Add and `Excerpt` for `Events`, manually with `CPT UI` functionality.
+- Change the output of the date field for `Events` to match your needs, manually with `Custom Fields` functionality.
+
+If you can't find your way around, Google it and you will find your solution.
+
+
+
+## Next.js code
+
+Enough of WordPress. 
+
+Let's now jump into Next.js. All the info you need to build this demo app is here: https://nextjs.org/
 
 In a folder, create a new Next.js project by running this on the terminal:
 
@@ -513,31 +529,492 @@ And let's name it `tech-blog`:
 ✔ What is your project named? … tech-blog
 ````
 
+The structure of the main files and folder is as following:
+
+````bas
+/pages
+	_app.js
+	index.js
+	/posts
+		[slug].js
+	/events
+		[slug].js
+		
+/components
+	Post.js
+	Event.js
+
+/utils
+	wordpress.js
+	utils.js
+	
+next.config.js	
+````
 
 
 
+This is the content of each file:
+
+````javascript
+//_app.js
+
+import '../styles/globals.css'
+import Head from 'next/head'
+
+function MyApp({ Component, pageProps }) {
+  return (
+    <>
+      <Head>
+        {/* you can add metadata here, for all pages */}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossOrigin="anonymous" />
+      </Head>
+      <Component {...pageProps} />
+    </>
+  )
+    
+}
+
+export default MyApp
+````
+
+````javascript
+//index.js
+
+import Head from 'next/head'
+
+import { getEvents, getMedia, getPosts, getFeaturedMedia } from '../utils/wordpress';
+
+import Post from "../components/Post";
+import Event from "../components/Event";
+
+export default function Home({posts, events, media}) {
+
+  const jsxPosts = posts.map(post => {
+    const featuredMediaId = post["featured_media"];
+    const featuredMedia = getFeaturedMedia(media, featuredMediaId);
+    return (
+      <Post post={post} featuredMedia={featuredMedia} key={post.id}/>
+    )
+  });
+
+  const jsxEvents = events.map(event => {
+    const featuredMediaId = event["featured_media"];
+    const featuredMedia = getFeaturedMedia(media, featuredMediaId);
+    return (
+      <Event event={event} featuredMedia={featuredMedia} key={event.id}/>
+    )
+  });
+
+  return (
+    <>
+      <Head>
+        <title>Tech Blog</title>
+        <meta name="description" content="Keep up to date with the latest trends in tech" />
+        <link rel="icon" href="/favicon.ico" />
+        {/* You can add more metadata here, like open graph tags for social media, etc */}
+      </Head>
+
+      <div className="container pt-5">
+        <h1 className="text-center pb-5">Tech Blog</h1>
+        <div className="row">
+          <div className="col-lg-8">
+            <h2 className="pb-3">Our blog posts</h2>
+            {jsxPosts}
+          </div>
+          <div className="col-lg-4">
+            <h2 className="pb-3">Events</h2>
+            {jsxEvents}
+          </div>
+        </div>
+      </div>
+    </>
+  )
+
+}
+
+export async function getStaticProps({ params }) {
+
+  const posts = await getPosts();
+  const events = await getEvents();
+  const media = await getMedia();
+
+  return {
+    props: {
+     posts,
+     events,
+     media
+    },
+    revalidate: 10, // In seconds
+  }
+
+}
+````
+
+```javascript
+// /posts/[slug].js
+
+import Link from "next/link";
+
+import {getPost, getSlugs} from "../../utils/wordpress";
+
+export default function PostPage({post}){
+    return (
+        <div className="container pt-5">
+            <h1 className="text-center pb-5">{post.title.rendered}</h1>
+            <div className="card-text pb-5" dangerouslySetInnerHTML={{__html: post.content.rendered}}></div>
+            <Link href="/">
+                <a className="btn btn-primary">Back to Home</a>
+            </Link>
+        </div>
+    )
+}
+
+  //hey Next, these are the possible slugs
+export async function getStaticPaths() {
+
+    const paths = await getSlugs("posts");
+  
+    return {
+        paths,
+        //this option below renders in the server (at request time) pages that were not rendered at build time
+        //e.g when a new blogpost is added to the app
+        fallback: 'blocking'
+    }
+  
+  }
+  
+  //access the router, get the id, and get the medatada for that post
+  
+  export async function getStaticProps({ params }) {
+  
+    const post = await getPost(params.slug);
+  
+    return {
+      props: {
+        post
+      },
+      revalidate: 10, // In seconds
+    }
+  
+  }
+```
+
+````javascript
+// /events/[slug].js
+
+import Link from "next/link";
+
+import {getEvent, getSlugs} from "../../utils/wordpress";
+
+export default function EventPage({event}){
+    return (
+        <div className="container pt-5">
+            <h1 className="text-center pb-5">{event.title.rendered}</h1>
+            <div className="card-text pb-5" dangerouslySetInnerHTML={{__html: event.content.rendered}}></div>
+            <Link href="/">
+                <a className="btn btn-primary">Back to Home</a>
+            </Link>
+        </div>
+    )
+}
+
+  //hey Next, these are the possible slugs
+export async function getStaticPaths() {
+
+    const paths = await getSlugs("events");
+  
+    return {
+        paths,
+        //this option below renders in the server (at request time) pages that were not rendered at build time
+        //e.g when a new blogpost is added to the app
+        fallback: 'blocking'
+    }
+  
+  }
+  
+  //access the router, get the id, and get the medatada for that post
+  
+  export async function getStaticProps({ params }) {
+  
+    const event = await getEvent(params.slug);
+  
+    return {
+      props: {
+        event
+      },
+      revalidate: 10, // In seconds
+    }
+  
+  }
+````
+
+````javascript
+// /components/Post.js
+
+
+import Link from "next/link";
+import Image from "next/image";
+//to use Image with an external url, add some config on next.config.js
+//for more info, check out this docs https://nextjs.org/docs/basic-features/image-optimization
+
+import {getDate} from "../utils/utils";
+
+export default function Post({post, featuredMedia}) {
+    
+    return (
+        <div className="card mb-3" style={{maxWidth: "540px"}}>
+            <div className="row g-0">
+                <div className="col-md-4">
+                    <Link href={`/posts/${post.slug}`}>
+                        <a>
+                            <Image src={featuredMedia["media_details"].sizes.medium["source_url"]} width={180} height={120} alt={featuredMedia["alt_text"]}/>
+                        </a>
+                    </Link>
+                </div>
+                <div className="col-md-8">
+                    <div className="card-body">
+                        <h5 className="card-title">{post.title.rendered}</h5>
+                        <div className="card-text" dangerouslySetInnerHTML={{__html: post.excerpt.rendered}}></div>
+                        <p className="card-text"><small className="text-muted">On {getDate(post.modified)}</small></p>
+                        <Link href={`/posts/${post.slug}`}>
+                            <a className="btn btn-primary">See more</a>
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+
+}
+````
+
+````javascript
+// /components/Event.js
+
+import Link from "next/link";
+import Image from "next/image";
+//to use Image with an external url, add some config on next.config.js
+//for more info, check out this docs https://nextjs.org/docs/basic-features/image-optimization
+
+
+export default function Event({event, featuredMedia}) {
+    return (
+        <div className="card mb-3" style={{width: "18rem"}}>
+            <Link href={`/events/${event.slug}`}>
+                <a>
+                    <Image src={featuredMedia["media_details"].sizes.medium["source_url"]} width={288} height={190} alt={featuredMedia["alt_text"]} className="card-img-top"/>
+                </a>
+            </Link>
+            <div className="card-body">
+                <h5 className="card-title">{event.title.rendered}</h5>
+            <div className="card-text" dangerouslySetInnerHTML={{__html: event.excerpt.rendered}}></div>
+                <p className="card-text"><small className="text-muted">{(event.acf.date)}</small></p>
+                <Link href={`/events/${event.slug}`}>
+                    <a className="btn btn-primary">See more</a>
+                </Link>
+            </div>
+        </div> 
+    )
+}
+````
+
+````javascript
+// /utils/wordpress.js
+
+const BASE_URL = "http://my-wordpress.sportslink.info/wp-json/wp/v2";
+
+export async function getPosts() {
+     const postsRes = await fetch(BASE_URL + "/posts");
+     const posts = await postsRes.json();
+    return posts;    
+}
+
+export async function getPost(slug) {
+    const posts = await getPosts();
+    const postArray = posts.filter(post => post.slug == slug);
+    const post = postArray.length > 0 ? postArray[0] : null;
+    return post;    
+}
+export async function getEvents() {
+     const eventsRes = await fetch(BASE_URL + "/events");
+     const events = await eventsRes.json();
+    return events;    
+}
+
+export async function getEvent(slug) {
+    const events = await getEvents();
+    const eventArray = events.filter(event => event.slug == slug);
+    const event = eventArray.length > 0 ? eventArray[0] : null;
+    return event;    
+}
+
+
+export async function getSlugs(type) {
+    let elements = [];
+    switch (type){
+        case "posts":
+            elements = await getPosts();
+        break;
+        case "events":
+            elements = await getEvents();
+        break;
+    }
+    const elementsIds = elements.map(element => { 
+        return { 
+            params: {
+                slug: element.slug
+            }
+        }
+    });
+   return elementsIds;    
+}
+
+export async function getMedia() {
+    const mediaRes = await fetch(BASE_URL + "/media");
+    const media = await mediaRes.json();
+   return media;    
+}
+
+export function getFeaturedMedia(media, id) {
+    const featuredMediaArray = media.filter(element => element.id == id);
+    return featuredMediaArray.length > 0 ? featuredMediaArray[0] : null;
+
+}
+````
+
+````javascript
+// utils/utils.js
+
+export function getDate(date){
+    return new Date(date).toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
+}
+````
+
+```javascript
+// next.config.js
+
+module.exports = {
+    images: {
+        //enter the domain or subdomain where you have WordPress installed 
+      domains: ['my-wordpress.sportslink.info'],
+    },
+}
+```
 
 
 
-Adding custom fields:
+#### Making use of SSG and ISR capabilities
+
+Using `getStaticProps` inside every page brings the benefit of having the data fetched at build time and that way, we get a static page.
+
+Inside each page that has a dynamic url, like `[slug].js`, inside `getStaticPaths` an config key value pair `fallback: 'blocking'` is passed, so if a user requests a newly create post after the Next app was built, Next.js will create the page on the fly on the server side and serve it to the user, and then that page be cached for future requests so it only happens once per path. You can learn more about it here: https://nextjs.org/docs/basic-features/data-fetching.
 
 
 
+## Deploying the Next.js app to Vercel
+
+What a better place to deploy your app that the platform of the creators of Next.js?
+
+This platform is called Vercel, and you need to sign up in order to host your app there: https://vercel.com/signup
+
+Follow their instructions, which are easy to follow, to setup your account and connect your github account to it.
+
+One nice feature of Vercel is that you can link a gitHub repo and get automatic builds every time new code is pushed to it. 
+
+Let's connect the demo app repo to Vercel:
+
+![](images/vercel-1.png)
 
 
 
+![](images/vercel-2.png)
+
+![](images/vercel-3.png)
 
 
 
+If there were no errors on the deployment step, then, you should see this on your dashboard:
+
+![](images/vercel-4.png)
 
 
 
+![](images/vercel-5.png)
+
+Well done! now your app can be shared with the world!
 
 
 
+## Connecting the main domain to vercel
+
+It's now time to connect a custom domain name, like `sportslink.info` to the app already deployed to Vercel.
+
+![](images/vercel-7.png)
+
+![](images/vercel-8.png)
 
 
 
+Then, you'll need to do a series of steps to connect the domain name to Vercel:
+
+- Copy A and CNAME records from your vercel Project inside `settings/domains`.
+
+- Go to your domain name provider (in this case SiteGround) and access the DNS zone editor. 
+- Delete default A records for sportslink.info and www.sportslink.info
+
+- Add A and CNAME records just for the MAIN DOMAIN (in this case,`sportslink.info`) with the data we copied form the Vercel dashboard.
+
+The A anc CNAME records should look like this:
+
+![](images/vercel-9.png)
 
 
+
+Pro tip: use this tool to check if changes in the DNS records have been propagated: https://www.digwebinterface.com/
+
+After some time, you should be able to enter your domain name on the browser and finally see your Next.js deployed there. The Vercel dashboard in  `settings/domains ` should look like this:
+
+![](images/vercel-10.png)
+
+
+
+Well done!! It's being a long journey to setup WordPress, build the Next.js app, deploy it and connect it to a custom domain. Good effort!
+
+
+
+## Testing SSG and ISR
+
+The easiest way to test that you're making use if SSG and IRS is to look at the build log:
+
+![](images/vercel-11.png)
+
+![](images/vercel-12.png)
+
+
+
+To test ISR, after your last deploy to Vercel, go to WordPress app and create a new post. Then, go to your depoyed Next.js app url, and click on the new post you created. If the route `posts/{your-new-post-slug}` shows the new post, ISR is working well! Otherwise, you would get a `404` default message, because that page hadn't been created at build time and could be found in your static assets.
+
+
+
+## Fine tuning: forcing https usage on subdomain, redicrecting the subdomain
+
+If we now access the subdomain were WordPress is installed we get this:
+
+![](images/fine-tuning-1.png)
+
+
+
+To solve this issue, we first need which theme is being applied:
+
+![](images/fine-tuning-2.png)
+
+Once we know the active theme, which `Twenty Twenty-One`, we can now go to the `File manager` on SiteGround, and modify the content of `twentytwentyone` folder.
+
+The idea is to write some some that redirects the users to the main domain (where the Next.js app lives) when they accidentally try to reach the subdomain.
+
+![](images/fine-tuning-3.png)
 
