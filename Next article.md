@@ -1,6 +1,6 @@
 # Next.js + WordPress as headless CMS
 
-Do you want to edit the content of your apps without touching a single line of code? 😯 
+Do you want to edit the content of your apps without touching a single line of code? 😯
 
 In this tutorial we'll explore **Next.js, one of the best performing front end web frameworks 🚀**, and **WordPress, the most popular open source software for creating websites**. 
 
@@ -12,91 +12,101 @@ What other things are you gonna learn?:
 
 ✔️ How to **set up WordPress on a subdomain** and **expose its data** on API endpoints.
 
-✔️ All the steps required to get a **production app deployed to Vercel** on a **custom domain name**, so you have the recipe to deliver apps to your clients.🔥🔥
+✔️ All the steps required to get a **production app deployed to Vercel** on a **custom domain name**, so you have a recipe to deliver apps to your clients.🔥🔥
 
-To learn all the things mentioned above, we're gonna build this demo app: ------demo app url here----------
+To learn all the things mentioned above, we're gonna build this demo app: https://academind-next-js-tech-blog.vercel.app/
 
-👉 Big thanks to Gonzalo Aguirre, from Underscope, a React Native company based in South America, for reviewing this tutorial.
+👉 Big thanks to Gonzalo Aguirre (https://twitter.com/_gonaguirre), from Underscope (https://underscope.io/), a React Native company based in South America, for reviewing this tutorial.
 
-This tutorial shows the technologies and steps taken to deliver this app (not finished yet) https://www.sportslink.info/ to a client in Germany🇩🇪
+This tutorial shows the technologies and steps taken to deliver this app https://www.sportslink.info/ (not finished yet) to a client in Germany 🇩🇪.
 
 
 
 Table of contents:
 
-Intro:
+**Intro**:
 
--What is Next.js?
+-[What is Next.js?](#what-is-next.js?)
 
--What is SSG & ISG?
+-[What is SSG and ISR?](#what-is-ssg-and-isr?)
 
--What is WordPress?
+-[What is WordPress?](#what-is-wordpress?)
 
--What is a headless CMS?
+-[What is a headless CMS?](#what-is-a-headless-cms?)
 
--The WordPress REST API
-
-
-
-Demo app:
-
--Demo app overview
-
--Buying a domain
-
--Seting up WordPress on a subdomain
-
--Adding data to WordPress
-
-​	-Adding new posts
-
-​	-Adding custom data
-
--Next.js code
-
--Deploying the Next.js app to Vercel
-
--Connecting the main domain to vercel
-
--Testing SSG and ISR
-
--Fine tuning: forcing https usage on subdomain, redicrecting the subdomain
+-[The WordPress REST API](#the-wordpress-rest-api)
 
 
 
+**Demo app**:
+
+-[Demo app overview](#demo-app-overview)
+
+-[Buying a domain name](#buying-a-domain-name)
+
+-[Setting up WordPress on a subdomain](#setting-up-wordpress-on-a-subdomain)
+
+-[Adding data to WordPress](#adding-data-to-wordpress)
+
+-[Creating new data types](#creating-new-data-types)
+
+​	-[Installing a plugin](#installing-a-plugin)
+
+​	-[Adding events post type](#adding-events-post-type)
+
+-[Adding custom fields](#adding-custom-fields)
+
+-[Exposing custom fields in the REST API](#exposing-custom-fields-in-the-rest-api)
+
+-[Next.js code](#next.js-code)
+
+​	-[Making use of SSG and ISR capabilities](#making-use-of-ssg-and-isr-capabilities)
+
+-[Deploying the Next.js app to Vercel](#deploying-the-next.js-app-to-vercel)
+
+-[Connecting the main domain to Vercel](#connecting-the-main-domain-to-vercel)
+
+-[Testing SSG and ISR](#testing-ssg-and-isr)
+
+-[Fine tuning](#fine-tuning): 
+
+​	-[Redirecting the subdomain](#redirecting-the-subdomain)
+
+​	-[Forcing https usage on the subdomain](#forcing-https-usage-on-the-subdomain)
 
 
-Conclusion:
+
+-[**Conclusion**](#conclusion)
 
 
 
 ## What is Next.js?
 
-According the creators (https://nextjs.org/).: 
+According to the creators (https://nextjs.org/).: 
 
 *Is the React framework from production.*
 
 *Next.js gives you the best developer experience with all the features you need for production: hybrid static & server rendering, TypeScript support, smart bundling, route pre-fetching, and more. No config needed.*
 
-There are tons of benefits for chosing Next.js over just React, and one of the main ones is getting good SEO, because the pages of the app that are loaded in the browser are already pre-rendered in the server side. 
+There are tons of benefits when chosing Next.js over just React, and one of the main ones is getting good SEO, because the pages of the app that are loaded in the browser are already pre-rendered on the server side. 
 
-If this is the first time you're hearing about this framework, take a look at this nice tutorial: https://nextjs.org/learn/basics/create-nextjs-app?utm_source=next-site&utm_medium=homepage-cta&utm_campaign=next-website
+If this is the first time you're hearing about this framework, take a look at this basic tutorial: https://nextjs.org/learn/basics/create-nextjs-app?utm_source=next-site&utm_medium=homepage-cta&utm_campaign=next-website
 
 If you wanna dive deeper, check out these Academind courses:
 
--https://www.youtube.com/watch?v=MFuwkrseXVE&ab_channel=Academind (for FREE!)
+-https://www.youtube.com/watch?v=MFuwkrseXVE&ab_channel=Academind (for FREE!🥳)
 
 -https://pro.academind.com/p/nextjs-react-the-complete-guide
 
 
 
-## What is SSG and ISR
+## What is SSG and ISR?
 
-**SSG stands for Static Site Generation.** This means that some or all the pages of the app are pre-rendered at build time, and are stored and delivered as static assets (JS, CSS and HTML files) to the browser. This is the philosophy of JamStack apps (https://jamstack.org/) which are the present and the future of web apps.
+**SSG** stands for **Static Site Generation.** This means that some or all the pages of the app are pre-rendered at build time, and are stored and delivered as static assets (JS, CSS and HTML files) to the browser. This is the philosophy of JamStack apps (https://jamstack.org/) which are the present and the future of web apps.
 
-Let's think together: if the app is pre-rendered at build time, the app fetches data from their APIs and Next.js generates the html with that data. But...what happens if later on, the data from the API changes?
+Let's think together: if the app is pre-rendered at build time, the app fetches data from their APIs and Next.js generates the html with that data on the server side. But...what happens if later on, the data from the API changes?
 
-Do we need to run a new build of the app to create fresh html so users see the new data when they load the app? Thankfully, Next.js provides a solution for us: **Incremental Site Regeneration (ISR)**.
+Do we need to run a new build of the app to create a fresh HTMLfile, so users see the new data when they load the app? No. Thankfully, Next.js provides a solution for us: **Incremental Site Regeneration (ISR)**.
 
 According to the docs (https://nextjs.org/docs/basic-features/data-fetching#incremental-static-regeneration):
 
@@ -110,13 +120,13 @@ We'll explore how to make use of these tools in later sections, when we'll build
 
 According to them (https://wordpress.org/), *WordPress is open source software you can use to create a beautiful website, blog, or app.*
 
-Let's look at some numbers to see how used is this software in the real world:
+Let's look at some numbers to see how used this software is in the real world:
 
 *WordPress is now **powering 39.5% of all websites in 2021**, up from powering 35% of sites in 2020. Counting only sites that use a content management system (CMS), WordPress has a market share of 64.1%.* (source: https://www.searchenginejournal.com)
 
-Why not using the most popular tech to build an app? Using something mainstream has the advantage of getting good support, tons of answered questions online, and besides that, it can be hosted in a server at a really low cost.
+Why not using the most popular tech to build an app? Using something mainstream has the advantage of getting **good support**, **tons of answered questions online**, and besides that, it can be hosted in a server at a **really low cost**.
 
-In a nutshell, WordPress is a bunch of PHP files and MySQL databases, installed on a Linux server, usin **Apache** (the most commonly used Web server on **Linux** systems).  This software can be used to store data and create html pages that users can interact with.
+In a nutshell, WordPress is a bunch of PHP files and MySQL databases, installed on a Linux server, using **Apache** (the most commonly used Web server on **Linux** systems).  This software can be used to store data and create HTML files which are translated into pages that users can interact with in the browser.
 
 Note: WordPress can also run on Windows and Mac, and this is the case when developing wordpress sites locally. Then, when on production, most web servers use Linux.
 
@@ -124,35 +134,33 @@ Note: WordPress can also run on Windows and Mac, and this is the case when devel
 
 ## What is a Headless CMS?
 
-A headless CMS (Content Management System) is using just using the back end part of a full stack app, that can expose functionality and data through  REST or GraphQL endpoints (urls).
+A headless CMS (Content Management System) is just using the back end part of a full stack app, that can expose functionality and data through REST or GraphQL endpoints (URLs).
 
-So, **instead of using WordPress for storing data and creating the html, we just only use it for storing data, and then we use Next.js to create the html instead and be in charge of the front end part of the app.**
+So, **instead of using WordPress for storing data and creating the HTML, we just only use it for storing data, and then we use Next.js or any other framework to create the HTML instead, and be in charge of the front end part of the app.**
 
-
+In our case, it will be Next.js making requests to these endpoints.
 
 ## The WordPress REST API:
 
-The WordPress REST API provides an interface for applications to interact with your WordPress back end by sending and receiving data as [JSON](https://en.wikipedia.org/wiki/JSON) (JavaScript Object Notation) objects.(https://developer.wordpress.org/rest-api/).
+The WordPress REST API provides an interface for applications to interact with your WordPress back end by sending and receiving data as [JSON](https://en.wikipedia.org/wiki/JSON) (JavaScript Object Notation) objects (https://developer.wordpress.org/rest-api/).
 
-So this API are a bunch of urls we can hit to access data stored in WordPress from any type of app that can make http requests. In our case, it will be Next.js making requests to this API.
+So this API is a collection of URLs or endpoints we can hit to access data stored in WordPress from any type of app that can make http requests, front end or back end apps, like Django, Ruby, Laravel app, etc.
 
 To make things more clear, let's look at the some of the available endpoints available by default (https://developer.wordpress.org/rest-api/reference/):
 
--/wp/v2/posts
+-`/wp/v2/posts`
 
--/wp/v2/media
+-`/wp/v2/media`
 
-Let's now look for a famous website that uses WordPress: https://www.bbcamerica.com/ and try to access data that they have stored in the back end of the wordpress software.
+Let's take a look at a famous website that uses WordPress: https://www.bbcamerica.com/ and try to access data that they have stored in the back end of the WordPress software.
 
-To access the endpoints of the REST API, all we need to do is to make an http request to `{domain}/wp-json/{endpoint}`. For example, try navigating to this url: https://www.bbcamerica.com/wp-json/wp/v2/media to see all the images the BBC America has stored on WordPress. Pretty awesome, insn't it?
+To access the endpoints of the REST API, all we need to do is to make an http request to `{domain}/wp-json/{endpoint}`. For example, try navigating to this url: https://www.bbcamerica.com/wp-json/wp/v2/media to see all the `media` the BBC America has stored on WordPress. Pretty awesome, isn't it?
 
-The response we get when hitting the above url has this shape: [{},{},..]
+The response we get when hitting the above URL has this shape: `[{},{},..]`.
 
-It's basically an array with objects inside, that have links to pictures (like this one:https://images.amcnetworks.com/bbcamerica.com/wp-content/uploads/2021/05/Colin-Farrell-300x169.jpg), which are part of the `media` collection in the back end.
+It's basically an array of objects, that have links to media (like this one:https://images.amcnetworks.com/bbcamerica.com/wp-content/uploads/2021/05/Colin-Farrell-300x169.jpg), which are part of the `media` collection in the back end.
 
-BBC America has decided to use WordPress as a full stack app, because besides using it to store data, it's being used to generate the html that users see when hitting https://www.bbcamerica.com/, but they can also use a front end framework like Next.js in the future, to provide users with faster navigation and better user experience if they want to, just by using the REST API already in place.
-
-
+BBC America has decided to use WordPress as a full stack app, because besides using it to store data, it's being used to generate the HTML that users see when hitting https://www.bbcamerica.com/, but they can also use a front end framework like Next.js in the future, to provide users with faster navigation and better user experience if they want to, just by using the REST API already in place.
 
 
 
@@ -160,21 +168,25 @@ BBC America has decided to use WordPress as a full stack app, because besides us
 
 Enough of theory. 
 
-Let's now build a Next.js app and connect it to a WordPress back end, so you can see the full potential of this tech stack combo. The Next.js app is deployed here: https://academind-next-js-tech-blog.vercel.app/, and the WordPress back end is installed here: https://my-wordpress.sportslink.info/.
+Let's now build a Next.js demo app and connect it to a WordPress back end, so you can see the full potential of this tech stack combo. 
 
-The Next.js app displays tech blog posts and events, and it uses SSG and ISR technology, deployed on Vercel (https://vercel.com/).
+The Next.js app is deployed here: https://academind-next-js-tech-blog.vercel.app/, and the WordPress back end is installed here: https://my-wordpress.sportslink.info/.
+
+The code of the Next.js app can be found here: https://github.com/estebanmunchjones2019/academind-next.js-tech-blog.
+
+The Next.js app displays tech `blog posts` and `events`, and it uses SSG and ISR technology, deployed on Vercel (https://vercel.com/).
 
 
 
-## Buying  a domain
+## Buying a domain name
 
 As this tutorial is about deploying an app to custom domain, let's start by buying one.
 
 There are tons of places where we can buy a domain name. Feel free to explore for hosting services + domain providers. You can check out a list of them here: https://www.wpbeginner.com/wordpress-hosting/
 
-In this article we'll use Siteground (https://www.siteground.co.uk/) to buy domain name and use their wordpress hosting service, all in one package.
+In this article we'll use Siteground (https://www.siteground.co.uk/) to buy domain name and use their wordpress hosting service, all in one purchase.
 
-There are many plans (https://www.siteground.co.uk/wordpress-hosting.htm):
+There are many plans to choose from (https://www.siteground.co.uk/wordpress-hosting.htm):
 
 ![](images/siteground-1.png)
 
@@ -186,7 +198,7 @@ Then, when checking out, you can buy a domain name:
 
 
 
-## Seting up WordPress on a subdomain
+## Setting up WordPress on a subdomain
 
 After finishing the purchase, the next step is to create a subdomain, but...why?
 
@@ -200,7 +212,7 @@ Here are the steps to create a subdomain:
 
 
 
-As you can see, there was an already created subdomain `wp`, which is beeing used in production for this app https://www.sportslink.info/. The new subdomain is called `my-wordpress`.
+As you can see, there was an already created subdomain `wp`, which is beeing used in production for this app https://www.sportslink.info/. The new subdomain created is called `my-wordpress`.
 
 ![](images/subdomain-1.png)
 
@@ -218,7 +230,7 @@ As you can see, there was an already created subdomain `wp`, which is beeing use
 
 
 
-That's it! We have now successfully installed WordPress on a subdomain.
+That's it! We have now successfully installed WordPress on a subdomain!
 
 
 
@@ -226,7 +238,7 @@ That's it! We have now successfully installed WordPress on a subdomain.
 
 The way to load data to WordPress is through the dashboard, which is a built in front end interface to interact with the backend.
 
-To access the dashboard, just go to `your-subdomain/wp-admin`, e.g `my-wordpress.sportslink.info/wp-admin`, and enter your credentials you entered when installing it. This is how the dashboard looks like:
+To access the dashboard, just go to `your-subdomain/wp-admin`, e.g `my-wordpress.sportslink.info/wp-admin`, and enter the credentials you set up when installing it. This is how the dashboard looks like:
 
 ![](images/wordpress-1.png)
 
@@ -250,11 +262,11 @@ Let's write our first post by clicking on `Posts` and then on `Add new`:
 
 
 
-Once we get into the `post` editing section, we enter a title, and text in the body and then click publish:
+Once we get into the `post` editing section, we enter a title and text in the body, and then click on `Publish`:
 
 ![](images/wordpress-4.png)
 
-Then, we are gonna asked a second time if we want to publish it, and we click on `Publish` and we'll see an alert at the bottom of the page:
+Then, we're gonna be asked a second time if we want to publish it, and we click on `Publish` again and we'll see an alert at the bottom of the page confirming the publishing:
 
 ![](images/wordpress-5.png)
 
@@ -264,7 +276,7 @@ Now, we can see the list of all the post we have in our WordPress app:
 
 
 
-Great! we have successfully created a new post. Let's now check if it's been exposed on the api endpoint `/wp/v2/posts`, in our case, `my-wordpress.sportslink.info/`:
+Great! we have successfully created a new post. Let's now check if it's been exposed on the api endpoint `/wp/v2/posts`, in our case, `my-wordpress.sportslink.info`:
 
 ![](images/wordpress-7.png)
 
@@ -377,23 +389,21 @@ This is the JSON data obtained:
 ]
 ````
 
-
-
-Our post is exposed to the world, and is ready to be consumed by any other app, like Next.js for example. Well done!
+Our post is exposed to the world, and is ready to be consumed by any other app, like Next.js for example. Well done👏!
 
 
 
 ## Creating new data types
 
-What if we want to create an array of events so it's exposed in the REST API? Events are not part of the default data types, like `Posts` are. 
+What if we want to create an array of `events` and expose it on the REST API? `Events` are not part of the default data types, like `Posts` are. 
 
- In WordPress, data types are called `posts`, which can be quite confusing with the actual `Posts` (blog posts). For instance: if we have `events`, `meetings`, `products`, `offers`, they are all `posts` (of different types) in the WordPress world. 
+In WordPress, data types are called `posts`, which can be quite confusing with the actual `Posts` (blog posts). For instance: if we have `events`, `meetings`, `products`, `offers`, they are all `posts` (of different types) in the WordPress world. 
 
 So, let's add new data type or `post type` by installing a **plugin**, which is a piece of code that we plugin to our WordPress app with just a few clicks.
 
 #### Installing a plugin
 
-These are the steps for installing a the `Custom Post Type UI` plugin by `WebDevStudios`:
+These are the steps for installing the `Custom Post Type UI` plugin by `WebDevStudios`:
 
 ![](images/plugin-1.png)
 
@@ -421,7 +431,7 @@ After activating this plugin, some new functionality has been added to our WordP
 
 
 
-Make sure `Show in REST API` is set to `True`, and then select any name you want for the REST API. In this case, as `events` has been chosen, the the array of `events` is gonna be retrievable at `subdomain/wp-json/wp/v2/events`.
+Make sure `Show in REST API` is set to `True`, and then select any name you want for the REST API enpoint for `events`. In this case, `events` has been chosen, so the array of `events` is gonna be retrievable at `subdomain/wp-json/wp/v2/events`.
 
 ![](images/events-3.png)
 
@@ -437,7 +447,7 @@ Let's now add a new event:
 
 
 
-An follow the same pattern we used for writin a new `Post` at the beginning. By default, the `Events` editing page looks the same as `Posts`, where we can write a title and body. Here is an example of an event:
+And follow the same pattern we used for writing a new `Post` at the beginning. By default, the `Events` editing page looks the same as `Posts`, where we can write a title and body. Here is an example of an event:
 
 ![](images/events-6.png)
 
@@ -451,13 +461,13 @@ Let's test if we get an array of events when hitting: `my-wordpress.sportslink.i
 
 
 
-## Adding custom fields:
+## Adding custom fields
 
-So far, so good, But...**an event should have a date and location**, should't it?
+So far so good, but...**an event should have a date and location**, shouldn't it?
 
-By default, our new `event` post type doesn't have any fields that let us load these data we want.
+By default, our new `event` post type doesn't have any fields that let us load this data we want.
 
-Once again, a plugin comes to solve a problem: let's install `Advance Custom Fields`, by `Elliot Condon`. 
+Once again, a plugin comes to solve a problem: let's install `Advanced Custom Fields`, by `Elliot Condon`. 
 
 Once installed, let's use it:
 
@@ -491,7 +501,7 @@ Let's try updating the already created `event` called `Web dev conference`:
 
 #### Exposing custom fields in the REST API
 
-By default, custom fields are not exposed in the REST API, so we need a new...(you guested it!)...plugin, to  make this happen without the need of writing any code. The plugin we need to install and activate is `ACF to REST API` by `Aires Gonçalves`.
+By default, custom fields are not exposed in the REST API, so we need a new...(you guessed it!)...plugin, to  make this happen without the need of writing code. The plugin we need to install and activate is `ACF to REST API` by `Aires Gonçalves`.
 
 Let's now check that REST API for `events`, by going to `my-wordpress.sportslink.info/wp-json/wp/v2/events`:
 
@@ -503,11 +513,11 @@ Let's now check that REST API for `events`, by going to `my-wordpress.sportslink
 
 There are a few things you can try on your own:
 
-- Upload featured images for `Events` and `Posts`. (Hint: when creating or editing them, look on your right).
-- Add and `Excerpt` for `Events`, manually with `CPT UI` functionality.
-- Change the output of the date field for `Events` to match your needs, manually with `Custom Fields` functionality.
+- Upload a `Featured Image` for `Events` and `Posts`. (Hint: when creating or editing them, look on your right).
+- Add an `Excerpt` for `Events`, manually with `CPT UI` functionality.
+- Change the output of the `date` field for `Events` to match your date format needs, manually with `Custom Fields` functionality.
 
-If you can't find your way around, Google it and you will find your solution.
+If you can't find your way around, Google it and you will find your solution, or give a shout on the Academind Discord Group: https://discord.com/invite/gxvEWGU
 
 
 
@@ -515,7 +525,7 @@ If you can't find your way around, Google it and you will find your solution.
 
 Enough of WordPress. 
 
-Let's now jump into Next.js. All the info you need to build this demo app is here: https://nextjs.org/
+Let's now jump into Next.js. All the technical info you need to build this demo app is here: https://nextjs.org/
 
 In a folder, create a new Next.js project by running this on the terminal:
 
@@ -566,7 +576,7 @@ function MyApp({ Component, pageProps }) {
     <>
       <Head>
         {/* you can add metadata here, for all pages */}
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossOrigin="anonymous" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-    beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossOrigin="anonymous" />
       </Head>
       <Component {...pageProps} />
     </>
@@ -669,7 +679,7 @@ export default function PostPage({post}){
     )
 }
 
-  //hey Next, these are the possible slugs
+//hey Next, these are the possible slugs
 export async function getStaticPaths() {
 
     const paths = await getSlugs("posts");
@@ -683,20 +693,19 @@ export async function getStaticPaths() {
   
   }
   
-  //access the router, get the id, and get the medatada for that post
+ //access the router, get the id, and get the data for that post 
+ export async function getStaticProps({ params }) {
   
-  export async function getStaticProps({ params }) {
+   const post = await getPost(params.slug);
   
-    const post = await getPost(params.slug);
+   return {
+     props: {
+       post
+     },
+     revalidate: 10, // In seconds
+   }
   
-    return {
-      props: {
-        post
-      },
-      revalidate: 10, // In seconds
-    }
-  
-  }
+ }
 ```
 
 ````javascript
@@ -755,7 +764,7 @@ export async function getStaticPaths() {
 import Link from "next/link";
 import Image from "next/image";
 //to use Image with an external url, add some config on next.config.js
-//for more info, check out this docs https://nextjs.org/docs/basic-features/image-optimization
+//for more info, check out these docs https://nextjs.org/docs/basic-features/image-optimization
 
 import {getDate} from "../utils/utils";
 
@@ -794,7 +803,7 @@ export default function Post({post, featuredMedia}) {
 import Link from "next/link";
 import Image from "next/image";
 //to use Image with an external url, add some config on next.config.js
-//for more info, check out this docs https://nextjs.org/docs/basic-features/image-optimization
+//for more info, check out these docs https://nextjs.org/docs/basic-features/image-optimization
 
 
 export default function Event({event, featuredMedia}) {
@@ -911,7 +920,7 @@ module.exports = {
 
 Using `getStaticProps` inside every page brings the benefit of having the data fetched at build time and that way, we get a static page.
 
-Inside each page that has a dynamic url, like `[slug].js`, inside `getStaticPaths` an config key value pair `fallback: 'blocking'` is passed, so if a user requests a newly create post after the Next app was built, Next.js will create the page on the fly on the server side and serve it to the user, and then that page be cached for future requests so it only happens once per path. You can learn more about it here: https://nextjs.org/docs/basic-features/data-fetching.
+On each page that has a dynamic url, like `[slug].js`, inside `getStaticPaths` a key value pair config `fallback: 'blocking'` is passed, so if a user requests a newly created post after the Next app was built, Next.js will automatically create that page on the fly on the server side and serve it to the user, and then, that page will be cached for future requests so the build process only happens once per path. You can learn more about it here: https://nextjs.org/docs/basic-features/data-fetching.
 
 
 
@@ -921,7 +930,7 @@ What a better place to deploy your app that the platform of the creators of Next
 
 This platform is called Vercel, and you need to sign up in order to host your app there: https://vercel.com/signup
 
-Follow their instructions, which are easy to follow, to setup your account and connect your github account to it.
+Follow their instructions, which are easy to follow, to set up your account and connect your github account to it.
 
 One nice feature of Vercel is that you can link a gitHub repo and get automatic builds every time new code is pushed to it. 
 
@@ -959,14 +968,14 @@ It's now time to connect a custom domain name, like `sportslink.info` to the app
 
 
 
-Then, you'll need to do a series of steps to connect the domain name to Vercel:
+Then, you'll need to do a series of steps to connect the custom domain name to Vercel:
 
-- Copy A and CNAME records from your vercel Project inside `settings/domains`.
+- Copy `A` and `CNAME` records from your vercel Project inside `settings/domains`.
 
-- Go to your domain name provider (in this case SiteGround) and access the DNS zone editor. 
-- Delete default A records for sportslink.info and www.sportslink.info
+- Go to your domain name provider (in this case SiteGround) and access the `DNS zone editor`. 
+- Delete default `A` records for sportslink.info and www.sportslink.info
 
-- Add A and CNAME records just for the MAIN DOMAIN (in this case,`sportslink.info`) with the data we copied form the Vercel dashboard.
+- Add a `A` and `CNAME` records just for the MAIN DOMAIN (in this case,`sportslink.info`) with the data we copied form the Vercel dashboard.
 
 The A anc CNAME records should look like this:
 
@@ -976,19 +985,19 @@ The A anc CNAME records should look like this:
 
 Pro tip: use this tool to check if changes in the DNS records have been propagated: https://www.digwebinterface.com/
 
-After some time, you should be able to enter your domain name on the browser and finally see your Next.js deployed there. The Vercel dashboard in  `settings/domains ` should look like this:
+After some time, you should be able to enter your domain name on the browser and finally see your Next.js app deployed there. The Vercel dashboard in  `settings/domains ` should look like this:
 
 ![](images/vercel-10.png)
 
 
 
-Well done!! It's being a long journey to setup WordPress, build the Next.js app, deploy it and connect it to a custom domain. Good effort!
+Well done!! 👏. It's being a long journey to set up WordPress, build the Next.js app, deploy it and connect it to a custom domain. Good effort! 💪
 
 
 
 ## Testing SSG and ISR
 
-The easiest way to test that you're making use if SSG and IRS is to look at the build log:
+The easiest way to test that you're making use if SSG and ISR is to look at the `build log`:
 
 ![](images/vercel-11.png)
 
@@ -996,11 +1005,13 @@ The easiest way to test that you're making use if SSG and IRS is to look at the 
 
 
 
-To test ISR, after your last deploy to Vercel, go to WordPress app and create a new post. Then, go to your depoyed Next.js app url, and click on the new post you created. If the route `posts/{your-new-post-slug}` shows the new post, ISR is working well! Otherwise, you would get a `404` default message, because that page hadn't been created at build time and could be found in your static assets.
+To test ISR, after your last deploy to Vercel, go to WordPress app and create a new post. Then, go to your depoyed Next.js app url, and click on the new post you created. If the route `posts/{your-new-post-slug}` shows the new post, ISR is working well! Otherwise, you would get a `404` default message, because that page hadn't been created at build time and couldn't be found in your static assets.
 
 
 
-## Fine tuning: forcing https usage on subdomain, redicrecting the subdomain
+## Fine tuning
+
+#### Redirecting the subdomain:
 
 If we now access the subdomain were WordPress is installed we get this:
 
@@ -1008,13 +1019,84 @@ If we now access the subdomain were WordPress is installed we get this:
 
 
 
-To solve this issue, we first need which theme is being applied:
+We don't want users to see the app content on the subdomain. To solve this issue, we first need to know which `theme` is being applied:
 
 ![](images/fine-tuning-2.png)
 
-Once we know the active theme, which `Twenty Twenty-One`, we can now go to the `File manager` on SiteGround, and modify the content of `twentytwentyone` folder.
+Once we know the active theme, which `Twenty Twenty-One` in this example, we can now go to the `File Manager` on SiteGround, and modify the content of the `twentytwentyone` folder.
 
-The idea is to write some some that redirects the users to the main domain (where the Next.js app lives) when they accidentally try to reach the subdomain.
+The idea is to write some code that redirects the users to the main domain (where the Next.js app lives) when they accidentally try to access the subdomain.
 
 ![](images/fine-tuning-3.png)
+
+Delete all the content of the the `twentytwentyone` folder, and create 2 new files, called `index.php` and `style.css`, which are the 2 required files to create a theme in WordPress. Paste this content in those files:
+
+````html
+<!-- index.php -->
+
+<meta content="0; URL='https://sportslink.info''" http-equiv"refresh">
+
+<!-- just in case the meta tag is not read properly, here is plan B: a JS redirect -->
+<script type="text/javascript">
+  window.location = 'https://sportslink.info';
+</script>
+
+````
+
+````css
+/*style.css*/
+
+/*
+Theme Name: Twenty Twenty-One
+Author: Esteban Munch Jones
+*/
+````
+
+Of course, replace `sportslink.info` with your own main domain name and the author's name with yours.
+
+
+
+#### Forcing https usage on the subdomain:
+
+Let's take a look at the browser when we load the dashboard of the WordPress installation on the subdomain:
+
+![](images/fine-tuning-4.png)
+
+
+
+To enforce `https` usage on the subdomain, we need to go to the hosting provider, in this case SiteGround, and follow these steps:
+
+![](images/fine-tuning-5.png)
+
+![](images/fine-tuning-6.png)
+
+![](images/fine-tuning-7.png)
+
+
+
+Make sure you change the `BASE_URL` on the `wordpress.js` file in the Next.js app:
+
+````javascript
+// /utils/wordpress.js
+
+//Replace:
+const BASE_URL = "http://my-wordpress.sportslink.info/wp-json/wp/v2";
+
+//with this:
+const BASE_URL = "https://my-wordpress.sportslink.info/wp-json/wp/v2";
+````
+
+
+
+## Conclusion
+
+After following this tutorial, you now have all the tools you need to provide a modern experience to the app users thanks to Next.js and, at the same time, give the app content editor the ability to edit content in an easy way using the WordPress dashboard.
+
+The price of the hosting WordPress makes it affordable for small projects, without the need of spending tons of money. 
+
+The final advantage is the big online community around Next.js and WordPress, so if you get stuck at some point, the answer will be at the tip of your fingers through a Google search.
+
+Congratulations on following this extense tutorial!🥳
+
+💻Happy coding!💻
 
