@@ -84,7 +84,7 @@ Table of contents:
 
 According to the creators (https://nextjs.org/).: 
 
-*Is the React framework from production.*
+*Is the React framework for production.*
 
 *Next.js gives you the best developer experience with all the features you need for production: hybrid static & server rendering, TypeScript support, smart bundling, route pre-fetching, and more. No config needed.*
 
@@ -104,9 +104,9 @@ If you wanna dive deeper, check out these Academind courses:
 
 **SSG** stands for **Static Site Generation.** This means that some or all the pages of the app are pre-rendered at build time, and are stored and delivered as static assets (JS, CSS and HTML files) to the browser. This is the philosophy of JamStack apps (https://jamstack.org/) which are the present and the future of web apps.
 
-Let's think together: if the app is pre-rendered at build time, the app fetches data from their APIs and Next.js generates the html with that data on the server side. But...what happens if later on, the data from the API changes?
+Let's think together: if the app is pre-rendered at build time, the app fetches data from their APIs and Next.js generates the HTML with that data on the server side. But...what happens if later on, the data from the API changes?
 
-Do we need to run a new build of the app to create a fresh HTMLfile, so users see the new data when they load the app? No. Thankfully, Next.js provides a solution for us: **Incremental Site Regeneration (ISR)**.
+Do we need to run a new build of the app to create a fresh HTML file, so users see the new data when they load the app? No. Thankfully, Next.js provides a solution for us: **Incremental Site Regeneration (ISR)**.
 
 According to the docs (https://nextjs.org/docs/basic-features/data-fetching#incremental-static-regeneration):
 
@@ -136,7 +136,7 @@ Note: WordPress can also run on Windows and Mac, and this is the case when devel
 
 A headless CMS (Content Management System) is just using the back end part of a full stack app, that can expose functionality and data through REST or GraphQL endpoints (URLs).
 
-So, **instead of using WordPress for storing data and creating the HTML, we just only use it for storing data, and then we use Next.js or any other framework to create the HTML instead, and be in charge of the front end part of the app.**
+So, **instead of using WordPress for storing data and creating the HTML, we just only use it for storing and exposing data, and then we use Next.js or any other framework to create the HTML instead, and be in charge of the front end part of the app.**
 
 In our case, it will be Next.js making requests to these endpoints.
 
@@ -997,7 +997,7 @@ Well done!! 👏. It's being a long journey to set up WordPress, build the Next.
 
 ## Testing SSG and ISR
 
-The easiest way to test that you're making use if SSG and ISR is to look at the `build log`:
+The easiest way to test that you're making use of SSG and ISR is to look at the `build log`:
 
 ![](images/vercel-11.png)
 
