@@ -20,8 +20,6 @@ To learn all the things mentioned above, we're gonna build this demo app: https:
 
 This tutorial shows the technologies and steps taken to deliver this app https://www.sportslink.info/ (not finished yet) to a client in Germany 🇩🇪.
 
-
-
 Table of contents:
 
 **Intro**:
@@ -36,8 +34,6 @@ Table of contents:
 
 -[The WordPress REST API](#the-wordpress-rest-api)
 
-
-
 **Demo app**:
 
 -[Demo app overview](#demo-app-overview)
@@ -50,9 +46,9 @@ Table of contents:
 
 -[Creating new data types](#creating-new-data-types)
 
-​	-[Installing a plugin](#installing-a-plugin)
+​    -[Installing a plugin](#installing-a-plugin)
 
-​	-[Adding events post type](#adding-events-post-type)
+​    -[Adding events post type](#adding-events-post-type)
 
 -[Adding custom fields](#adding-custom-fields)
 
@@ -60,7 +56,7 @@ Table of contents:
 
 -[Next.js code](#next.js-code)
 
-​	-[Making use of SSG and ISR capabilities](#making-use-of-ssg-and-isr-capabilities)
+​    -[Making use of SSG and ISR capabilities](#making-use-of-ssg-and-isr-capabilities)
 
 -[Deploying the Next.js app to Vercel](#deploying-the-next.js-app-to-vercel)
 
@@ -70,15 +66,11 @@ Table of contents:
 
 -[Fine tuning](#fine-tuning): 
 
-​	-[Redirecting the subdomain](#redirecting-the-subdomain)
+​    -[Redirecting the subdomain](#redirecting-the-subdomain)
 
-​	-[Forcing https usage on the subdomain](#forcing-https-usage-on-the-subdomain)
-
-
+​    -[Forcing https usage on the subdomain](#forcing-https-usage-on-the-subdomain)
 
 -[**Conclusion**](#conclusion)
-
-
 
 ## What is Next.js?
 
@@ -98,8 +90,6 @@ If you wanna dive deeper, check out these Academind courses:
 
 -https://pro.academind.com/p/nextjs-react-the-complete-guide
 
-
-
 ## What is SSG and ISR?
 
 **SSG** stands for **Static Site Generation.** This means that some or all the pages of the app are pre-rendered at build time, and are stored and delivered as static assets (JS, CSS and HTML files) to the browser. This is the philosophy of JamStack apps (https://jamstack.org/) which are the present and the future of web apps.
@@ -114,8 +104,6 @@ According to the docs (https://nextjs.org/docs/basic-features/data-fetching#incr
 
 We'll explore how to make use of these tools in later sections, when we'll build a demo app.
 
-
-
 ## What is WordPress?
 
 According to them (https://wordpress.org/), *WordPress is open source software you can use to create a beautiful website, blog, or app.*
@@ -129,8 +117,6 @@ Why not using the most popular tech to build an app? Using something mainstream 
 In a nutshell, WordPress is a bunch of PHP files and MySQL databases, installed on a Linux server, using **Apache** (the most commonly used Web server on **Linux** systems).  This software can be used to store data and create HTML files which are translated into pages that users can interact with in the browser.
 
 Note: WordPress can also run on Windows and Mac, and this is the case when developing wordpress sites locally. Then, when on production, most web servers use Linux.
-
-
 
 ## What is a Headless CMS?
 
@@ -162,8 +148,6 @@ It's basically an array of objects, that have links to media (like this one:http
 
 BBC America has decided to use WordPress as a full stack app, because besides using it to store data, it's being used to generate the HTML that users see when hitting https://www.bbcamerica.com/, but they can also use a front end framework like Next.js in the future, to provide users with faster navigation and better user experience if they want to, just by using the REST API already in place.
 
-
-
 ## Demo app overview
 
 Enough of theory. 
@@ -175,8 +159,6 @@ The Next.js app is deployed here: https://academind-next-js-tech-blog.vercel.app
 The code of the Next.js app can be found here: https://github.com/estebanmunchjones2019/academind-next.js-tech-blog.
 
 The Next.js app displays tech `blog posts` and `events`, and it uses SSG and ISR technology, deployed on Vercel (https://vercel.com/).
-
-
 
 ## Buying a domain name
 
@@ -190,13 +172,9 @@ There are many plans to choose from (https://www.siteground.co.uk/wordpress-host
 
 ![](images/siteground-1.png)
 
-
-
 Then, when checking out, you can buy a domain name:
 
 ![](images/siteground-2.png)
-
-
 
 ## Setting up WordPress on a subdomain
 
@@ -210,29 +188,17 @@ Here are the steps to create a subdomain:
 
 ![](images/subdomain-1.png)
 
-
-
 As you can see, there was an already created subdomain `wp`, which is beeing used in production for this app https://www.sportslink.info/. The new subdomain created is called `my-wordpress`.
 
 ![](images/subdomain-1.png)
 
-
-
 ![](images/subdomain-3.png)
-
-
 
 ![](images/subdomain-4.png)
 
-
-
 ![](images/subdomain-5.png)
 
-
-
 That's it! We have now successfully installed WordPress on a subdomain!
-
-
 
 ## Adding data to WordPress
 
@@ -242,25 +208,17 @@ To access the dashboard, just go to `your-subdomain/wp-admin`, e.g `my-wordpress
 
 ![](images/wordpress-1.png)
 
-
-
 This is how the dashboard looks like:
 
 ![](images/wordpress-2.png)
 
-
-
 If you wanna know more about the dashboard, check out this documentation: https://wordpress.org/support/article/dashboard-screen/
-
-
 
 #### Writing our first post:
 
 Let's write our first post by clicking on `Posts` and then on `Add new`:
 
 ![](images/wordpress-3.png)
-
-
 
 Once we get into the `post` editing section, we enter a title and text in the body, and then click on `Publish`:
 
@@ -274,15 +232,13 @@ Now, we can see the list of all the post we have in our WordPress app:
 
 ![](images/wordpress-6.png)
 
-
-
 Great! we have successfully created a new post. Let's now check if it's been exposed on the api endpoint `/wp/v2/posts`, in our case, `my-wordpress.sportslink.info`:
 
 ![](images/wordpress-7.png)
 
 This is the JSON data obtained:
 
-````
+```
 [
    {
       "id": 6,
@@ -387,11 +343,9 @@ This is the JSON data obtained:
       }
    }
 ]
-````
+```
 
 Our post is exposed to the world, and is ready to be consumed by any other app, like Next.js for example. Well done👏!
-
-
 
 ## Creating new data types
 
@@ -401,21 +355,18 @@ In WordPress, data types are called `posts`, which can be quite confusing with t
 
 So, let's add new data type or `post type` by installing a **plugin**, which is a piece of code that we plugin to our WordPress app with just a few clicks.
 
+👉 **Update**: there's a **new free plugin** that simplifies all the steps below to add custom data types and fields, and it's called `Atlas Content Modeler` https://wordpress.org/plugins/atlas-content-modeler/
+So you might want to use `Atlas Content Modeler` instead of `Custom Post Type UI` + `Advanced Custom Fields` + `ACF to REST API`. Quite a good deal, isn't it? 😉
+
 #### Installing a plugin
 
 These are the steps for installing the `Custom Post Type UI` plugin by `WebDevStudios`:
 
 ![](images/plugin-1.png)
 
-
-
 ![](images/plugin-2.png)
 
-
-
 ![](images/plugin-3.png)
-
-
 
 #### Adding `events` post type
 
@@ -425,27 +376,17 @@ After activating this plugin, some new functionality has been added to our WordP
 
 ![](images/events-1.png)
 
-
-
 ![](images/events-2.png)
-
-
 
 Make sure `Show in REST API` is set to `True`, and then select any name you want for the REST API enpoint for `events`. In this case, `events` has been chosen, so the array of `events` is gonna be retrievable at `subdomain/wp-json/wp/v2/events`.
 
 ![](images/events-3.png)
 
-
-
 ![](images/events-4.png)
-
-
 
 Let's now add a new event:
 
 ![](images/events-5.png)
-
-
 
 And follow the same pattern we used for writing a new `Post` at the beginning. By default, the `Events` editing page looks the same as `Posts`, where we can write a title and body. Here is an example of an event:
 
@@ -455,11 +396,7 @@ And follow the same pattern we used for writing a new `Post` at the beginning. B
 
 Let's test if we get an array of events when hitting: `my-wordpress.sportslink.info/wp-json/wp/v2/events`.
 
-
-
 ![](images/events-7.png)
-
-
 
 ## Adding custom fields
 
@@ -473,31 +410,19 @@ Once installed, let's use it:
 
 ![](images/events-8.png)
 
-
-
 ![](images/events-9.png)
-
-
 
 ![](images/events-10.png)
 
-
-
 ![](images/events-11.png)
 
-
-
 ![](images/events-12.png)
-
-
 
 Well done! it took some time to set it up, but we can now see if these 2 fields appear when we try to edit/update an `event`.
 
 Let's try updating the already created `event` called `Web dev conference`:
 
 ![](images/events-13.png)
-
-
 
 #### Exposing custom fields in the REST API
 
@@ -506,8 +431,6 @@ By default, custom fields are not exposed in the REST API, so we need a new...(y
 Let's now check that REST API for `events`, by going to `my-wordpress.sportslink.info/wp-json/wp/v2/events`:
 
 ![](images/events-14.png)
-
-
 
 👉 Challenge for you here:
 
@@ -519,7 +442,7 @@ There are a few things you can try on your own:
 
 If you can't find your way around, Google it and you will find your solution, or give a shout on the Academind Discord Group: https://discord.com/invite/gxvEWGU
 
-
+👉 **Update**: Do you want to expose your WordPress data with GraphQL? No problem! use `WPGraphQL` plugin https://www.wpgraphql.com/.
 
 ## Next.js code
 
@@ -529,43 +452,41 @@ Let's now jump into Next.js. All the technical info you need to build this demo 
 
 In a folder, create a new Next.js project by running this on the terminal:
 
-````bash
+```bash
 npx create-next-app
-````
+```
 
 And let's name it `tech-blog`:
 
-````bash
+```bash
 ✔ What is your project named? … tech-blog
-````
+```
 
 The structure of the main files and folder is as following:
 
-````bas
+```bas
 /pages
-	_app.js
-	index.js
-	/posts
-		[slug].js
-	/events
-		[slug].js
-		
+    _app.js
+    index.js
+    /posts
+        [slug].js
+    /events
+        [slug].js
+
 /components
-	Post.js
-	Event.js
+    Post.js
+    Event.js
 
 /utils
-	wordpress.js
-	utils.js
-	
-next.config.js	
-````
+    wordpress.js
+    utils.js
 
-
+next.config.js    
+```
 
 This is the content of each file:
 
-````javascript
+```javascript
 //_app.js
 
 import '../styles/globals.css'
@@ -581,35 +502,34 @@ function MyApp({ Component, pageProps }) {
       <Component {...pageProps} />
     </>
   )
-    
+
 }
 
 export default MyApp
-````
+```
 
-````javascript
+```javascript
 //index.js
+
 
 import Head from 'next/head'
 
-import { getEvents, getMedia, getPosts, getFeaturedMedia } from '../utils/wordpress';
+import { getEvents, getPosts } from '../utils/wordpress';
 
 import Post from "../components/Post";
 import Event from "../components/Event";
 
-export default function Home({posts, events, media}) {
+export default function Home({posts, events}) {
 
   const jsxPosts = posts.map(post => {
-    const featuredMediaId = post["featured_media"];
-    const featuredMedia = getFeaturedMedia(media, featuredMediaId);
+    const featuredMedia = post['_embedded']['wp:featuredmedia'][0];
     return (
       <Post post={post} featuredMedia={featuredMedia} key={post.id}/>
     )
   });
 
   const jsxEvents = events.map(event => {
-    const featuredMediaId = event["featured_media"];
-    const featuredMedia = getFeaturedMedia(media, featuredMediaId);
+    const featuredMedia = event['_embedded']['wp:featuredmedia'][0];
     return (
       <Event event={event} featuredMedia={featuredMedia} key={event.id}/>
     )
@@ -646,19 +566,17 @@ export async function getStaticProps({ params }) {
 
   const posts = await getPosts();
   const events = await getEvents();
-  const media = await getMedia();
-
   return {
     props: {
      posts,
-     events,
-     media
+     events
     },
     revalidate: 10, // In seconds
   }
 
 }
-````
+
+```
 
 ```javascript
 // /posts/[slug].js
@@ -683,32 +601,32 @@ export default function PostPage({post}){
 export async function getStaticPaths() {
 
     const paths = await getSlugs("posts");
-  
+
     return {
         paths,
         //this option below renders in the server (at request time) pages that were not rendered at build time
         //e.g when a new blogpost is added to the app
         fallback: 'blocking'
     }
-  
+
   }
-  
+
  //access the router, get the id, and get the data for that post 
  export async function getStaticProps({ params }) {
-  
+
    const post = await getPost(params.slug);
-  
+
    return {
      props: {
        post
      },
      revalidate: 10, // In seconds
    }
-  
+
  }
 ```
 
-````javascript
+```javascript
 // /events/[slug].js
 
 import Link from "next/link";
@@ -731,33 +649,33 @@ export default function EventPage({event}){
 export async function getStaticPaths() {
 
     const paths = await getSlugs("events");
-  
+
     return {
         paths,
         //this option below renders in the server (at request time) pages that were not rendered at build time
         //e.g when a new blogpost is added to the app
         fallback: 'blocking'
     }
-  
+
   }
-  
+
   //access the router, get the id, and get the medatada for that post
-  
+
   export async function getStaticProps({ params }) {
-  
+
     const event = await getEvent(params.slug);
-  
+
     return {
       props: {
         event
       },
       revalidate: 10, // In seconds
     }
-  
-  }
-````
 
-````javascript
+  }
+```
+
+```javascript
 // /components/Post.js
 
 
@@ -769,7 +687,7 @@ import Image from "next/image";
 import {getDate} from "../utils/utils";
 
 export default function Post({post, featuredMedia}) {
-    
+
     return (
         <div className="card mb-3" style={{maxWidth: "540px"}}>
             <div className="row g-0">
@@ -795,9 +713,9 @@ export default function Post({post, featuredMedia}) {
     )
 
 }
-````
+```
 
-````javascript
+```javascript
 // /components/Event.js
 
 import Link from "next/link";
@@ -825,73 +743,62 @@ export default function Event({event, featuredMedia}) {
         </div> 
     )
 }
-````
+```
 
-````javascript
+```javascript
 // /utils/wordpress.js
 
-const BASE_URL = "http://my-wordpress.sportslink.info/wp-json/wp/v2";
+
+const BASE_URL = "https://my-wordpress.sportslink.info/wp-json/wp/v2";
 
 export async function getPosts() {
-     const postsRes = await fetch(BASE_URL + "/posts");
-     const posts = await postsRes.json();
-    return posts;    
+  const postsRes = await fetch(BASE_URL + "/posts?_embed");
+  const posts = await postsRes.json();
+  return posts;
 }
 
 export async function getPost(slug) {
-    const posts = await getPosts();
-    const postArray = posts.filter(post => post.slug == slug);
-    const post = postArray.length > 0 ? postArray[0] : null;
-    return post;    
+  const posts = await getPosts();
+  const postArray = posts.filter((post) => post.slug == slug);
+  const post = postArray.length > 0 ? postArray[0] : null;
+  return post;
 }
 export async function getEvents() {
-     const eventsRes = await fetch(BASE_URL + "/events");
-     const events = await eventsRes.json();
-    return events;    
+  const eventsRes = await fetch(BASE_URL + "/events?_embed");
+  const events = await eventsRes.json();
+  return events;
 }
 
 export async function getEvent(slug) {
-    const events = await getEvents();
-    const eventArray = events.filter(event => event.slug == slug);
-    const event = eventArray.length > 0 ? eventArray[0] : null;
-    return event;    
+  const events = await getEvents();
+  const eventArray = events.filter((event) => event.slug == slug);
+  const event = eventArray.length > 0 ? eventArray[0] : null;
+  return event;
 }
-
 
 export async function getSlugs(type) {
-    let elements = [];
-    switch (type){
-        case "posts":
-            elements = await getPosts();
-        break;
-        case "events":
-            elements = await getEvents();
-        break;
-    }
-    const elementsIds = elements.map(element => { 
-        return { 
-            params: {
-                slug: element.slug
-            }
-        }
-    });
-   return elementsIds;    
+  let elements = [];
+  switch (type) {
+    case "posts":
+      elements = await getPosts();
+      break;
+    case "events":
+      elements = await getEvents();
+      break;
+  }
+  const elementsIds = elements.map((element) => {
+    return {
+      params: {
+        slug: element.slug,
+      },
+    };
+  });
+  return elementsIds;
 }
 
-export async function getMedia() {
-    const mediaRes = await fetch(BASE_URL + "/media");
-    const media = await mediaRes.json();
-   return media;    
-}
+```
 
-export function getFeaturedMedia(media, id) {
-    const featuredMediaArray = media.filter(element => element.id == id);
-    return featuredMediaArray.length > 0 ? featuredMediaArray[0] : null;
-
-}
-````
-
-````javascript
+```javascript
 // utils/utils.js
 
 export function getDate(date){
@@ -901,7 +808,7 @@ export function getDate(date){
         year: 'numeric',
       });
 }
-````
+```
 
 ```javascript
 // next.config.js
@@ -914,15 +821,15 @@ module.exports = {
 }
 ```
 
+👉 **Update**: big thanks to Ivo Bastos Pereira from Portugal, for flagging an issue https://github.com/estebanmunchjones2019/academind-next.js-tech-blog/issues/1 on the demo app. You can follow him on https://github.com/hivvu. 
 
+The changes implemented to solve that issue are the addition of a url param `?_embed` when calling the WordPress endpoints. This way, we get the `featuredMedia` image of each `post` embedded, and that avoids an extra call to `/media` endpoint to get that image.
 
 #### Making use of SSG and ISR capabilities
 
 Using `getStaticProps` inside every page brings the benefit of having the data fetched at build time and that way, we get a static page.
 
 On each page that has a dynamic url, like `[slug].js`, inside `getStaticPaths` a key value pair config `fallback: 'blocking'` is passed, so if a user requests a newly created post after the Next app was built, Next.js will automatically create that page on the fly on the server side and serve it to the user, and then, that page will be cached for future requests so the build process only happens once per path. You can learn more about it here: https://nextjs.org/docs/basic-features/data-fetching.
-
-
 
 ## Deploying the Next.js app to Vercel
 
@@ -938,25 +845,17 @@ Let's connect the demo app repo to Vercel:
 
 ![](images/vercel-1.png)
 
-
-
 ![](images/vercel-2.png)
 
 ![](images/vercel-3.png)
-
-
 
 If there were no errors on the deployment step, then, you should see this on your dashboard:
 
 ![](images/vercel-4.png)
 
-
-
 ![](images/vercel-5.png)
 
 Well done! now your app can be shared with the world!
-
-
 
 ## Connecting the main domain to vercel
 
@@ -966,13 +865,12 @@ It's now time to connect a custom domain name, like `sportslink.info` to the app
 
 ![](images/vercel-8.png)
 
-
-
 Then, you'll need to do a series of steps to connect the custom domain name to Vercel:
 
 - Copy `A` and `CNAME` records from your vercel Project inside `settings/domains`.
 
 - Go to your domain name provider (in this case SiteGround) and access the `DNS zone editor`. 
+
 - Delete default `A` records for sportslink.info and www.sportslink.info
 
 - Add a `A` and `CNAME` records just for the MAIN DOMAIN (in this case,`sportslink.info`) with the data we copied form the Vercel dashboard.
@@ -981,19 +879,13 @@ The A anc CNAME records should look like this:
 
 ![](images/vercel-9.png)
 
-
-
 Pro tip: use this tool to check if changes in the DNS records have been propagated: https://www.digwebinterface.com/
 
 After some time, you should be able to enter your domain name on the browser and finally see your Next.js app deployed there. The Vercel dashboard in  `settings/domains ` should look like this:
 
 ![](images/vercel-10.png)
 
-
-
 Well done!! 👏. It's being a long journey to set up WordPress, build the Next.js app, deploy it and connect it to a custom domain. Good effort! 💪
-
-
 
 ## Testing SSG and ISR
 
@@ -1003,11 +895,7 @@ The easiest way to test that you're making use of SSG and ISR is to look at the 
 
 ![](images/vercel-12.png)
 
-
-
 To test ISR, after your last deploy to Vercel, go to WordPress app and create a new post. Then, go to your depoyed Next.js app url, and click on the new post you created. If the route `posts/{your-new-post-slug}` shows the new post, ISR is working well! Otherwise, you would get a `404` default message, because that page hadn't been created at build time and couldn't be found in your static assets.
-
-
 
 ## Fine tuning
 
@@ -1016,8 +904,6 @@ To test ISR, after your last deploy to Vercel, go to WordPress app and create a 
 If we now access the subdomain were WordPress is installed we get this:
 
 ![](images/fine-tuning-1.png)
-
-
 
 We don't want users to see the app content on the subdomain. To solve this issue, we first need to know which `theme` is being applied:
 
@@ -1031,7 +917,7 @@ The idea is to write some code that redirects the users to the main domain (wher
 
 Delete all the content of the the `twentytwentyone` folder, and create 2 new files, called `index.php` and `style.css`, which are the 2 required files to create a theme in WordPress. Paste this content in those files:
 
-````html
+```html
 <!-- index.php -->
 
 <meta content="0; URL='https://sportslink.info''" http-equiv"refresh">
@@ -1040,29 +926,24 @@ Delete all the content of the the `twentytwentyone` folder, and create 2 new fil
 <script type="text/javascript">
   window.location = 'https://sportslink.info';
 </script>
+```
 
-````
-
-````css
+```css
 /*style.css*/
 
 /*
 Theme Name: Twenty Twenty-One
 Author: Esteban Munch Jones
 */
-````
+```
 
 Of course, replace `sportslink.info` with your own main domain name and the author's name with yours.
-
-
 
 #### Forcing https usage on the subdomain:
 
 Let's take a look at the browser when we load the dashboard of the WordPress installation on the subdomain:
 
 ![](images/fine-tuning-4.png)
-
-
 
 To enforce `https` usage on the subdomain, we need to go to the hosting provider, in this case SiteGround, and follow these steps:
 
@@ -1072,11 +953,9 @@ To enforce `https` usage on the subdomain, we need to go to the hosting provider
 
 ![](images/fine-tuning-7.png)
 
-
-
 Make sure you change the `BASE_URL` on the `wordpress.js` file in the Next.js app:
 
-````javascript
+```javascript
 // /utils/wordpress.js
 
 //Replace:
@@ -1084,9 +963,7 @@ const BASE_URL = "http://my-wordpress.sportslink.info/wp-json/wp/v2";
 
 //with this:
 const BASE_URL = "https://my-wordpress.sportslink.info/wp-json/wp/v2";
-````
-
-
+```
 
 ## Conclusion
 
@@ -1099,4 +976,3 @@ The final advantage is the big online community around Next.js and WordPress, so
 Congratulations on following this extense tutorial!🥳
 
 💻Happy coding!💻
-
