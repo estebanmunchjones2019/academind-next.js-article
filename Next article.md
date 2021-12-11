@@ -821,7 +821,7 @@ module.exports = {
 }
 ```
 
-👉 **Update**: big thanks to Ivo Bastos Pereira from Portugal, for flagging an issue https://github.com/estebanmunchjones2019/academind-next.js-tech-blog/issues/1 on the demo app. You can follow him on https://github.com/hivvu. 
+👉 **Update**: big thanks to Ivo Pereira, for flagging an issue https://github.com/estebanmunchjones2019/academind-next.js-tech-blog/issues/1 on the demo app. You can follow him on https://github.com/hivvu. 
 
 The changes implemented to solve that issue are the addition of a url param `?_embed` when calling the WordPress endpoints. This way, we get the `featuredMedia` image of each `post` embedded, and that avoids an extra call to `/media` endpoint to get that image.
 
